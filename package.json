@@ -15,9 +15,9 @@
   "dependencies": {
     "@ant-design/icons": "^4.8.0",
     "@music163/antd": "^0.1.2",
-    "@music163/tango-core": "*",
-    "@music163/tango-designer": "*",
-    "@music163/tango-helpers": "*",
+    "@music163/tango-core": "latest",
+    "@music163/tango-designer": "latest",
+    "@music163/tango-helpers": "latest",
     "antd": "^4.24.2",
     "coral-system": "^1.0.5"
   },
