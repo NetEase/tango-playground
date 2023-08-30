@@ -43,7 +43,7 @@ export default function App({ match, location }: any) {
   const [menuLoading, setMenuLoading] = useState(true);
   const [menuData, setMenuData] = useState(false);
 
-  const name = match?.params?.name;
+  const name = match?.params?.name || location?.query?.name;
 
   useEffect(() => {
     if (!name || !demo[name]) {
