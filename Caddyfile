@@ -1,11 +1,17 @@
 :8080
 
-root * ./dist
+handle_path /designer/* {
+  root * ./dist/designer
+  try_files {path} {path}/ /index.html?{query}
+  file_server
+}
 
-file_server
+handle /* {
+  root * ./dist
+  file_server
+  try_files {path} {path}/ /index.html?{query}
+}
 
 header {
   Origin-Agent-Cluster ?0
 }
-
-try_files {path} {path}/ /index.html?{query}

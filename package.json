@@ -9,7 +9,8 @@
     "lib"
   ],
   "scripts": {
-    "build": "COMPRESS=none umi build",
+    "build": "umi build",
+    "build:test": "COMPRESS=none umi build",
     "start": "HTTPS=1 umi dev"
   },
   "dependencies": {

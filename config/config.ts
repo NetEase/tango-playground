@@ -7,6 +7,12 @@ export default {
   title: 'Tango Playground',
   routes: [
     {
+      exact: true,
+      path: '/',
+      component: 'index',
+      name: '首页',
+    },
+    {
       exact: false,
       path: '/:name',
       component: 'index',
