@@ -1,0 +1,45 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - README.md
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm install
+      - run: npm run build
+
+      - name: Extract Sandbox
+        run: |
+          # extract prebuilt codesandbox, to reduce build time
+          # TODO: add workflow in codesandbox repo, then get prebuilt asset from github release
+          wget -O- https://d2.music.126.net/dmusic/obj/w5zCg8OAw6HDjzjDgMK_/30168699837/f1bc/be92/5c92/c04c1a9f4eddfb5f54eb413787b2f274.xz | tar xJvf - -C /app/dist
+          # redirect root path to /designer if it's not in iframe
+          sed -i "s|</head>|<script>(function(){if(window.top===window)window.location.href=\"/designer\"})()</script></head>|" /app/dist/index.html
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_dir: ./dist
+          github_token: ${{ secrets.GITHUB_TOKEN }}
