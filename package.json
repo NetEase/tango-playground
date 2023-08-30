@@ -21,6 +21,7 @@
     "coral-system": "^1.0.5"
   },
   "devDependencies": {
-    "umi": "^3.5.24"
+    "umi": "^3.5.24",
+    "tslib": "^2.6.2"
   }
 }
