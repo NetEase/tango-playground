@@ -1,0 +1,11 @@
+:8080
+
+root * ./dist
+
+file_server
+
+header {
+  Origin-Agent-Cluster ?0
+}
+
+try_files {path} {path}/ /index.html?{query}

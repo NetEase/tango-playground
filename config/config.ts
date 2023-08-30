@@ -1,6 +1,9 @@
 import path from 'path';
 
 export default {
+  base: '/designer',
+  publicPath: '/designer/',
+  outputPath: './dist/designer/',
   routes: [
     {
       exact: true,
