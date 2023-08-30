@@ -4,6 +4,7 @@ export default {
   base: '/designer',
   publicPath: '/designer/',
   outputPath: './dist/designer/',
+  title: 'Tango Playground',
   routes: [
     {
       exact: true,

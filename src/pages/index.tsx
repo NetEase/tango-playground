@@ -67,7 +67,7 @@ export default function App() {
         </SidebarPanel>
         <WorkspacePanel>
           <ViewPanel mode="design">
-            <Sandbox bundlerURL="https://tango-codesandbox.ft.netease.com" />
+            <Sandbox bundlerURL="https://tango-demo.musicfe.com" />
           </ViewPanel>
           <ViewPanel mode="code">
             <CodeEditor />
