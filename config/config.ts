@@ -1,8 +1,5 @@
 import path from 'path';
 
-const resolvePackageIndex = (relativeEntry: string) =>
-  path.resolve(__dirname, '../../../packages/', relativeEntry);
-
 export default {
   routes: [
     {
@@ -28,15 +25,6 @@ export default {
     edge: false,
     ios: false,
   },
-  alias: {
-    '@music163/tango-helpers': resolvePackageIndex('helpers/src/index.ts'),
-    '@music163/tango-core': resolvePackageIndex('core/src/index.ts'),
-    '@music163/tango-context': resolvePackageIndex('context/src/index.ts'),
-    '@music163/tango-ui': resolvePackageIndex('ui/src/index.ts'),
-    '@music163/tango-designer': resolvePackageIndex('designer/src/index.ts'),
-    '@music163/tango-sandbox': resolvePackageIndex('sandbox/src/index.ts'),
-    '@music163/tango-setting-form': resolvePackageIndex('setting-form/src/index.ts'),
-  },
   externals: {
     react: 'React',
     'react-dom': 'ReactDOM',
@@ -52,13 +40,6 @@ export default {
       .include.add(/node_modules/)
       .end()
       .type('javascript/auto');
-    config.module.rule('js').include.add(resolvePackageIndex('context/src'));
-    config.module.rule('js').include.add(resolvePackageIndex('core/src'));
-    config.module.rule('js').include.add(resolvePackageIndex('designer/src'));
-    config.module.rule('js').include.add(resolvePackageIndex('helpers/src'));
-    config.module.rule('js').include.add(resolvePackageIndex('sandbox/src'));
-    config.module.rule('js').include.add(resolvePackageIndex('setting-form/src'));
-    config.module.rule('js').include.add(resolvePackageIndex('ui/src'));
     return config;
   },
 };
