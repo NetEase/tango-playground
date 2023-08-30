@@ -78,7 +78,7 @@ const appJson: any = {
 };
 
 const routesCode = `
-import Index from "./pages/list";
+import Index from "./pages/index";
 
 const routes = [
   {
@@ -218,7 +218,7 @@ export const sampleFiles = [
   { filename: '/src/index.less', code: lessCode },
   { filename: '/src/style.css', code: cssCode },
   { filename: '/src/index.js', code: entryCode },
-  { filename: '/src/pages/list.js', code: viewHomeCode },
+  { filename: '/src/pages/index.js', code: viewHomeCode },
   { filename: '/src/routes.js', code: routesCode },
   { filename: '/src/stores/index.js', code: storeIndexCode },
   { filename: '/src/stores/app.js', code: storeApp },

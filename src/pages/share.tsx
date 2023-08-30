@@ -129,14 +129,14 @@ export function Logo() {
 }
 
 // 项目信息
-export function ProjectDetail() {
+export function ProjectDetail({ name }: { name?: string }) {
   return (
     <Box display="flex" alignItems="center" columnGap="l">
       <Box className="ProjectName" fontSize="18px" fontWeight="bold">
-        lc-online-test
+        Tango Playground
       </Box>
       <Box className="BranchName" as="code" fontSize="14px">
-        <BranchesOutlined /> feature/list
+        <BranchesOutlined /> {name || 'demo'}
       </Box>
     </Box>
   );

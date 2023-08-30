@@ -1,3 +1,10 @@
 {
-  "extends": "../../tsconfig.json"
+  "extends": "./tsconfig.prod.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "strictFunctionTypes": true
+  }
 }

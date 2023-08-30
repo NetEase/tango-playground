@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Designer,
   DesignerPanel,
@@ -17,6 +17,7 @@ import { prototypes, menuData } from '@music163/antd/lib/esm/designer';
 import { Logo, ProjectDetail } from './share';
 import { sampleFiles } from '../mock/project';
 import './index.less';
+import demo from '../demo';
 
 console.log(prototypes, menuData);
 
@@ -44,12 +45,24 @@ const sandboxQuery = new DndQuery({
  * 默认使用 CodeSandbox https://local.netease.com:6006/
  * 如果使用 ViteSandbox https://local.netease.com:6006?moduleType=esm
  */
-export default function App() {
+export default function App({ match, location }: any) {
+  const name = match?.params?.name;
+
+  useEffect(() => {
+    if (!name || !demo[name]) {
+      return;
+    }
+
+    demo[name]?.forEach?.((item: any) => {
+      workspace.updateFile(item.filename, item.code);
+    });
+  }, [name]);
+
   return (
     <Designer engine={engine} sandboxQuery={sandboxQuery}>
       <DesignerPanel
         logo={<Logo />}
-        description={<ProjectDetail />}
+        description={<ProjectDetail name={demo[name] && name} />}
         actions={
           <ToolbarPanel>
             <ToolbarPanel.Item key="modeSwitch" placement="right" />
