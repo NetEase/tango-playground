@@ -41,6 +41,9 @@ jobs:
           # redirect root path to /designer if it's not in iframe
           sed -i "s|</head>|<script>(function(){if(window.top===window)window.location.href=\"/designer\"})()</script></head>|" ./dist/index.html
 
+      - name: Add CNAME
+        run: echo "tango-demo.musicfe.com" > ./dist/CNAME
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
