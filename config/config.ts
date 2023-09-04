@@ -52,4 +52,11 @@ export default {
       .type('javascript/auto');
     return config;
   },
+  define: {
+    'process.env.SANDBOX_BUNDLER_URL': process.env.SANDBOX_BUNDLER_URL ?? (
+      process.env.NODE_ENV === 'development'
+        ? `https://${process.env.HOST || 'local.netease.com'}:8443`
+        : null
+    ),
+  }
 };

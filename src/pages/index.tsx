@@ -78,7 +78,7 @@ export default function App({ match, location }: any) {
         <WorkspacePanel>
           <ViewPanel mode="design">
             <Sandbox
-              bundlerURL="https://tango-demo.musicfe.com"
+              bundlerURL={process.env.SANDBOX_BUNDLER_URL || 'https://tango-demo.musicfe.com'}
               onMessage={(e) => {
                 if (e.type === 'done') {
                   const sandboxWindow: any = sandboxQuery.window;

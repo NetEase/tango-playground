@@ -10,6 +10,10 @@
 127.0.0.1 local.netease.com
 ```
 
+此外还需要参考 Tango 的文档 [启动本地沙箱](https://netease.github.io/tango/docs/designer/quick-start#%E5%90%AF%E5%8A%A8%E6%9C%AC%E5%9C%B0%E6%B2%99%E7%AE%B1) 一节在本地运行沙箱（线上版本沙箱因 GitHub Pages 限制，无法返回 http 响应头），启动后确认 https://local.netease.com:8443 能访问到沙箱产物并信任自签证书
+
+若沙箱的地址或端口不一致，请指定 `SANDBOX_BUNDLER_URL` 环境变量或修改 `src/pages/index.tsx` 中 `<Sandbox>` 的 `bundlerURL` 属性
+
 然后安装依赖并启动即可
 
 ```sh
