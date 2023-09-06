@@ -13,10 +13,12 @@ import {
   ComponentsView,
 } from '@music163/tango-designer';
 import { createEngine, Workspace } from '@music163/tango-core';
+import { IRouteComponentProps } from 'umi';
 import { Logo, ProjectDetail } from './share';
 import { sampleFiles } from '../mock/project';
 import './index.less';
 import demo from '../demo';
+import { DemoItemType } from '../utils';
 
 // 1. 实例化工作区
 const workspace = new Workspace({
@@ -39,7 +41,7 @@ const sandboxQuery = new DndQuery({
 /**
  * 3. 平台初始化，访问 https://local.netease.com:6006/
  */
-export default function App({ match, location }: any) {
+export default function App({ match, location }: IRouteComponentProps) {
   const [menuLoading, setMenuLoading] = useState(true);
   const [menuData, setMenuData] = useState(false);
 
@@ -50,7 +52,7 @@ export default function App({ match, location }: any) {
       return;
     }
 
-    demo[name]?.forEach?.((item: any) => {
+    (demo[name] as DemoItemType)?.files?.forEach?.((item) => {
       workspace.updateFile(item.filename, item.code);
     });
   }, [name]);
@@ -59,7 +61,7 @@ export default function App({ match, location }: any) {
     <Designer engine={engine} sandboxQuery={sandboxQuery}>
       <DesignerPanel
         logo={<Logo />}
-        description={<ProjectDetail name={demo[name] && name} />}
+        description={<ProjectDetail name={demo[name] && (demo[name]?.title || name)} />}
         actions={
           <ToolbarPanel>
             <ToolbarPanel.Item key="modeSwitch" placement="right" />
