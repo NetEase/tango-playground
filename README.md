@@ -41,11 +41,14 @@ demo 均放置在 `/src/demo` 目录下，每个目录就是一个 demo 示例
     import srcStoresIndex from '!!raw-loader!./src/stores/index.js';
     import tangoConfigJson from '!!raw-loader!./tango.config.json';
 
-    export default [{
+    export default {
+      title: 'Your Demo',
+      files: [{
         filename: '/src/pages/index.js', code: srcPagesIndex,
         filename: '/src/stores/index.js', code: srcStoresIndex,
         filename: '/tango.config.json', code: tangoConfigJson,
-    }];
+      }]
+    };
     ```
 
 4.  修改 `/src/demo` 目录下的 `index.ts` 文件，将上面的文件夹 import 进来，使用 `mergeDemo()` 包裹，然后在 export default 中导出，导出时填写的 key 就是模板名称：
@@ -55,8 +58,8 @@ demo 均放置在 `/src/demo` 目录下，每个目录就是一个 demo 示例
     import yourDemo from './your-demo';
 
     export default {
-        // ...其他的 demo...
-        'your-demo': mergeDemo(yourDemo),
+      // ...其他的 demo...
+      'your-demo': mergeDemo(yourDemo),
     };
     ```
 
