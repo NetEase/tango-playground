@@ -1,10 +1,10 @@
-import { FileItemType } from '@music163/tango-core';
+import { IFileConfig } from '@music163/tango-core';
 import { sampleFiles } from '../mock/project';
 
 export type DemoItemType = {
   title?: string;
   description?: string;
-  files: FileItemType[];
+  files: IFileConfig[];
   [x: string]: any;
 };
 
