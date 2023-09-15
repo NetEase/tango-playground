@@ -2,7 +2,7 @@ const packageJson = {
   name: 'demo',
   private: true,
   dependencies: {
-    '@music163/antd': '0.1.5',
+    '@music163/antd': '0.1.6',
     '@music163/tango-boot': '0.1.3',
     react: '17.0.2',
     'react-dom': '17.0.2',
@@ -11,7 +11,7 @@ const packageJson = {
   },
 };
 
-const tangoJson = {
+const tangoConfigJson = {
   packages: {
     react: {
       version: '17.0.2',
@@ -52,7 +52,7 @@ const tangoJson = {
       description: '云音乐低代码运行时框架',
     },
     '@music163/antd': {
-      version: '0.1.5',
+      version: '0.1.7',
       library: 'TangoAntd',
       type: 'baseDependency',
       resources: [
@@ -148,7 +148,7 @@ import {
 class App extends React.Component {
   render() {
     return (
-      <Page title="页面标题">
+      <Page title={tango.stores.app.title}>
        <Section>
        </Section>
        <Section>
@@ -167,7 +167,7 @@ import { defineStore } from '@music163/tango-boot';
 
 export default defineStore({
 
-  title: 'hello world',
+  title: 'Page Title',
 
   array: [1, 2, 3],
 }, 'app');
@@ -221,7 +221,7 @@ p {
 export const sampleFiles = [
   { filename: '/package.json', code: JSON.stringify(packageJson) },
   { filename: '/appJson.json', code: JSON.stringify(appJson) },
-  { filename: '/tango.config.json', code: JSON.stringify(tangoJson) },
+  { filename: '/tango.config.json', code: JSON.stringify(tangoConfigJson) },
   { filename: '/README.md', code: '# readme' },
   { filename: '/src/index.less', code: lessCode },
   { filename: '/src/style.css', code: cssCode },

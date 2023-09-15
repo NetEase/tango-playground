@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { Box } from 'coral-system';
+import { Button, Space } from 'antd';
 import {
   Designer,
   DesignerPanel,
-  SidebarPanel,
   SettingPanel,
-  ToolbarPanel,
+  Sidebar,
+  Toolbar,
   WorkspacePanel,
-  ViewPanel,
+  WorkspaceView,
+  ComponentsPanel,
   CodeEditor,
   Sandbox,
   DndQuery,
-  ComponentsView,
 } from '@music163/tango-designer';
 import { createEngine, Workspace } from '@music163/tango-core';
 import { IRouteComponentProps } from 'umi';
@@ -63,22 +65,32 @@ export default function App({ match, location }: IRouteComponentProps) {
         logo={<Logo />}
         description={<ProjectDetail name={demo[name] && (demo[name]?.title || name)} />}
         actions={
-          <ToolbarPanel>
-            <ToolbarPanel.Item key="modeSwitch" placement="right" />
-            <ToolbarPanel.Item key="togglePanel" placement="right" />
-          </ToolbarPanel>
+          <Box px="l">
+            <Toolbar>
+              <Toolbar.Item key="routeSwitch" placement="left" />
+              <Toolbar.Item key="modeSwitch" placement="right" />
+              <Toolbar.Item key="togglePanel" placement="right" />
+              <Toolbar.Separator />
+              <Toolbar.Item key="extra" placement="right">
+                <Space>
+                  <Button type="primary">发布</Button>
+                </Space>
+              </Toolbar.Item>
+            </Toolbar>
+          </Box>
         }
       >
-        <SidebarPanel>
-          <SidebarPanel.Item key="outline" />
-          <SidebarPanel.Item key="components">
-            <ComponentsView menuData={menuData as any} loading={menuLoading} />
-          </SidebarPanel.Item>
-          <SidebarPanel.Item key="model" isFloat width={800} />
-          <SidebarPanel.Item key="dataSource" isFloat width={800} />
-        </SidebarPanel>
+        <Sidebar>
+          <Sidebar.Item key="outline" />
+          <Sidebar.Item key="components">
+            <ComponentsPanel menuData={menuData as any} loading={menuLoading} />
+          </Sidebar.Item>
+          <Sidebar.Item key="variables" isFloat width={800} />
+          <Sidebar.Item key="dataSource" isFloat width={800} />
+          <Sidebar.Item key="dependency" isFloat width={800} />
+        </Sidebar>
         <WorkspacePanel>
-          <ViewPanel mode="design">
+          <WorkspaceView mode="design">
             <Sandbox
               bundlerURL={process.env.SANDBOX_BUNDLER_URL || 'https://tango-demo.musicfe.com'}
               onMessage={(e) => {
@@ -96,10 +108,10 @@ export default function App({ match, location }: IRouteComponentProps) {
                 }
               }}
             />
-          </ViewPanel>
-          <ViewPanel mode="code">
+          </WorkspaceView>
+          <WorkspaceView mode="code">
             <CodeEditor />
-          </ViewPanel>
+          </WorkspaceView>
         </WorkspacePanel>
         <SettingPanel />
       </DesignerPanel>
