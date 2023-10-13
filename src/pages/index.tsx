@@ -50,7 +50,7 @@ const sandboxQuery = new DndQuery({
 /**
  * 3. 平台初始化，访问 https://local.netease.com:6006/
  */
-export default function App({ match, location }: IRouteComponentProps) {
+export default function App({ match, location }: IRouteComponentProps<any, any>) {
   const [menuLoading, setMenuLoading] = useState(true);
   const [menuData, setMenuData] = useState(false);
 
