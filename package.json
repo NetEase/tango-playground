@@ -11,7 +11,7 @@
   "scripts": {
     "build": "umi build",
     "build:test": "COMPRESS=none umi build",
-    "start": "HTTPS=1 umi dev"
+    "start": "umi dev"
   },
   "dependencies": {
     "@ant-design/icons": "^4.8.0",

@@ -9,16 +9,23 @@ import {
   Toolbar,
   WorkspacePanel,
   WorkspaceView,
-  ComponentsPanel,
   CodeEditor,
   Sandbox,
   DndQuery,
 } from '@music163/tango-designer';
 import { createEngine, Workspace } from '@music163/tango-core';
 import { IRouteComponentProps } from 'umi';
-import { Logo, ProjectDetail } from './share';
+import { Logo, ProjectDetail, bootHelperVariables } from './share';
 import { sampleFiles } from '../mock/project';
 import './index.less';
+import {
+  ApiOutlined,
+  AppstoreAddOutlined,
+  BuildOutlined,
+  ClusterOutlined,
+  FunctionOutlined,
+} from '@ant-design/icons';
+
 import demo from '../demo';
 import { DemoItemType } from '../utils';
 
@@ -60,7 +67,14 @@ export default function App({ match, location }: IRouteComponentProps) {
   }, [name]);
 
   return (
-    <Designer engine={engine} sandboxQuery={sandboxQuery}>
+    <Designer
+      engine={engine}
+      config={{
+        customActionVariables: bootHelperVariables,
+        customExpressionVariables: bootHelperVariables,
+      }}
+      sandboxQuery={sandboxQuery}
+    >
       <DesignerPanel
         logo={<Logo />}
         description={<ProjectDetail name={demo[name] && (demo[name]?.title || name)} />}
@@ -68,10 +82,11 @@ export default function App({ match, location }: IRouteComponentProps) {
           <Box px="l">
             <Toolbar>
               <Toolbar.Item key="routeSwitch" placement="left" />
+              <Toolbar.Item key="preview" placement="left" />
               <Toolbar.Item key="modeSwitch" placement="right" />
               <Toolbar.Item key="togglePanel" placement="right" />
               <Toolbar.Separator />
-              <Toolbar.Item key="extra" placement="right">
+              <Toolbar.Item placement="right">
                 <Space>
                   <Button type="primary">发布</Button>
                 </Space>
@@ -81,13 +96,31 @@ export default function App({ match, location }: IRouteComponentProps) {
         }
       >
         <Sidebar>
-          <Sidebar.Item key="outline" />
-          <Sidebar.Item key="components">
-            <ComponentsPanel menuData={menuData as any} loading={menuLoading} />
-          </Sidebar.Item>
-          <Sidebar.Item key="variables" isFloat width={800} />
-          <Sidebar.Item key="dataSource" isFloat width={800} />
-          <Sidebar.Item key="dependency" isFloat width={800} />
+          <Sidebar.Item key="outline" label="结构" icon={<BuildOutlined />} />
+          <Sidebar.Item
+            key="components"
+            label="组件"
+            icon={<AppstoreAddOutlined />}
+            widgetProps={{
+              menuData: menuData as any,
+              loading: menuLoading,
+            }}
+          />
+          <Sidebar.Item
+            key="variables"
+            label="变量"
+            icon={<FunctionOutlined />}
+            isFloat
+            width={800}
+          />
+          <Sidebar.Item key="dataSource" label="接口" icon={<ApiOutlined />} isFloat width={800} />
+          <Sidebar.Item
+            key="dependency"
+            label="依赖"
+            icon={<ClusterOutlined />}
+            isFloat
+            width={800}
+          />
         </Sidebar>
         <WorkspacePanel>
           <WorkspaceView mode="design">
