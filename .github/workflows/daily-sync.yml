@@ -20,12 +20,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Check upstream modified
         id: check_upstream
         run: |
           # get last sync hash
           last_hash=$(git log --grep 'feat: sync upstream changes' -1 | grep -P '(?<=updated to NetEase/tango@).+$' -o)
+          if [[ -z $last_hash ]]; then
+            echo "Can't find the last commit"
+            echo "upstream_changed=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "::debug::get last commit hash ${last_hash}"
           echo "last_hash=${last_hash}" >> $GITHUB_OUTPUT
 
           # add upstream to remote
@@ -38,6 +46,7 @@ jobs:
           # check if upstream has changed
           if [[ $(git diff upstream/main ${last_hash} -- apps/playground) ]]; then
             echo "upstream_changed=true" >> $GITHUB_OUTPUT
+            echo "Files changed in apps/playground"
           else
             echo "upstream_changed=false" >> $GITHUB_OUTPUT
             echo "No changes from upstream"
@@ -92,6 +101,7 @@ jobs:
         run: |
           # get upstream current hash
           current_hash=$(git rev-parse upstream/main)
+          echo "::debug::upstream commit hash ${last_hash}"
           nl=$'\n';
 
           # commit changes
@@ -100,10 +110,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "feat: sync upstream changes${nl}${nl}updated to NetEase/tango@${current_hash}"
           commit_hash=$(git rev-parse HEAD)
+          echo "::debug::committed hash ${last_hash}"
           echo "commit_hash=${commit_hash}" >> $GITHUB_OUTPUT
 
           git push
           echo "push_success=true" >> $GITHUB_OUTPUT
+          echo "::debug::Commit has been pushed successfully"
 
   deploy:
     needs: sync_upstream
