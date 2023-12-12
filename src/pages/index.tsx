@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Box } from 'coral-system';
 import { Button, Space } from 'antd';
 import {
@@ -15,7 +15,6 @@ import {
   themeLight,
 } from '@music163/tango-designer';
 import { createEngine, Workspace } from '@music163/tango-core';
-import { IRouteComponentProps } from 'umi';
 import { Logo, ProjectDetail, bootHelperVariables, sampleFiles } from '../helpers';
 import {
   ApiOutlined,
@@ -27,6 +26,7 @@ import {
 
 import demo from '../demo';
 import { DemoItemType } from '../utils';
+import { useLocation, useMatch } from 'umi';
 
 // 1. 实例化工作区
 const workspace = new Workspace({
@@ -50,11 +50,19 @@ const sandboxQuery = new DndQuery({
 /**
  * 3. 平台初始化，访问 https://local.netease.com:6006/
  */
-export default function App({ match, location }: IRouteComponentProps<any, any>) {
+export default function App() {
   const [menuLoading, setMenuLoading] = useState(true);
   const [menuData, setMenuData] = useState(false);
 
-  const name = match?.params?.name || location?.query?.name;
+  const location = useLocation();
+  const match = useMatch({ path: '/:name' });
+  const name = useMemo(() => {
+    if (match?.params?.name) {
+      return match?.params?.name;
+    }
+    const query = new URLSearchParams(location.search);
+    return query.get('name') || undefined;
+  }, [match?.params, location.search]);
 
   useEffect(() => {
     if (!name || !demo[name]) {
@@ -62,7 +70,7 @@ export default function App({ match, location }: IRouteComponentProps<any, any>)
     }
 
     (demo[name] as DemoItemType)?.files?.forEach?.((item) => {
-      workspace.updateFile(item.filename, item.code);
+      workspace.addFile(item.filename, item.code);
     });
   }, [name]);
 
@@ -78,7 +86,7 @@ export default function App({ match, location }: IRouteComponentProps<any, any>)
     >
       <DesignerPanel
         logo={<Logo />}
-        description={<ProjectDetail name={demo[name] && (demo[name]?.title || name)} />}
+        description={<ProjectDetail name={name && demo[name] && (demo[name]?.title || name)} />}
         actions={
           <Box px="l">
             <Toolbar>

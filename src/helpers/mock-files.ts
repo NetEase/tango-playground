@@ -76,7 +76,7 @@ const tangoConfigJson = {
 };
 
 const routesCode = `
-import Index from "./pages/list";
+import Index from "./pages/index";
 
 const routes = [
   {
@@ -258,7 +258,7 @@ export const sampleFiles = [
   { filename: '/src/index.less', code: lessCode },
   { filename: '/src/style.css', code: cssCode },
   { filename: '/src/index.js', code: entryCode },
-  { filename: '/src/pages/list.js', code: viewHomeCode },
+  { filename: '/src/pages/index.js', code: viewHomeCode },
   { filename: '/src/components/button.js', code: componentsButtonCode },
   { filename: '/src/components/prototype.js', code: componentsPrototypeCode },
   { filename: '/src/routes.js', code: routesCode },

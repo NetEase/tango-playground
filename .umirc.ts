@@ -1,9 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'umi';
 
-const resolvePackageIndex = (relativeEntry: string) =>
-  path.resolve(__dirname, '../../packages/', relativeEntry);
-
 export default defineConfig({
   base: '/designer',
   publicPath: '/designer/',
@@ -47,6 +44,7 @@ export default defineConfig({
     key: path.resolve(__dirname, 'local.netease.com-key.pem'),
     cert: path.resolve(__dirname, 'local.netease.com.pem'),
   },
+  jsMinifier: 'terser',
   chainWebpack: (config: any) => {
     // @see https://github.com/graphql/graphql-js/issues/1272#issuecomment-393903706
     config.module
