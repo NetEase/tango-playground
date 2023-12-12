@@ -1,5 +1,5 @@
 import { IFileConfig } from '@music163/tango-core';
-import { sampleFiles } from '../mock/project';
+import { sampleFiles } from '../helpers';
 
 export type DemoItemType = {
   title?: string;

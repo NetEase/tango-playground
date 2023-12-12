@@ -12,12 +12,11 @@ import {
   CodeEditor,
   Sandbox,
   DndQuery,
+  themeLight,
 } from '@music163/tango-designer';
 import { createEngine, Workspace } from '@music163/tango-core';
 import { IRouteComponentProps } from 'umi';
-import { Logo, ProjectDetail, bootHelperVariables } from './share';
-import { sampleFiles } from '../mock/project';
-import './index.less';
+import { Logo, ProjectDetail, bootHelperVariables, sampleFiles } from '../helpers';
 import {
   ApiOutlined,
   AppstoreAddOutlined,
@@ -38,6 +37,7 @@ const workspace = new Workspace({
 // 2. 引擎初始化
 const engine = createEngine({
   workspace,
+  defaultActiveSidebarPanel: 'outline',
 });
 
 // @ts-ignore
@@ -68,6 +68,7 @@ export default function App({ match, location }: IRouteComponentProps<any, any>)
 
   return (
     <Designer
+      theme={themeLight}
       engine={engine}
       config={{
         customActionVariables: bootHelperVariables,
@@ -82,6 +83,7 @@ export default function App({ match, location }: IRouteComponentProps<any, any>)
           <Box px="l">
             <Toolbar>
               <Toolbar.Item key="routeSwitch" placement="left" />
+              <Toolbar.Item key="history" placement="left" />
               <Toolbar.Item key="preview" placement="left" />
               <Toolbar.Item key="modeSwitch" placement="right" />
               <Toolbar.Item key="togglePanel" placement="right" />
@@ -96,7 +98,6 @@ export default function App({ match, location }: IRouteComponentProps<any, any>)
         }
       >
         <Sidebar>
-          <Sidebar.Item key="outline" label="结构" icon={<BuildOutlined />} />
           <Sidebar.Item
             key="components"
             label="组件"
@@ -106,6 +107,7 @@ export default function App({ match, location }: IRouteComponentProps<any, any>)
               loading: menuLoading,
             }}
           />
+          <Sidebar.Item key="outline" label="结构" icon={<BuildOutlined />} />
           <Sidebar.Item
             key="variables"
             label="变量"

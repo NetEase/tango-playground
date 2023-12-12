@@ -17,37 +17,43 @@ const tangoConfigJson = {
       version: '17.0.2',
       library: 'React',
       type: 'dependency',
-      resources: ['https://unpkg.com/react@{{version}}/umd/react.development.js'],
+      resources: ['https://cdn.jsdelivr.net/npm/react@{{version}}/umd/react.development.js'],
     },
     'react-dom': {
       version: '17.0.2',
       library: 'ReactDOM',
       type: 'dependency',
-      resources: ['https://unpkg.com/react-dom@{{version}}/umd/react-dom.development.js'],
+      resources: [
+        'https://cdn.jsdelivr.net/npm/react-dom@{{version}}/umd/react-dom.development.js',
+      ],
     },
     'react-is': {
       version: '16.13.1',
       library: 'ReactIs',
       type: 'dependency',
-      resources: ['https://unpkg.com/react-is@{{version}}/umd/react-is.production.min.js'],
+      resources: [
+        'https://cdn.jsdelivr.net/npm/react-is@{{version}}/umd/react-is.production.min.js',
+      ],
     },
     'styled-components': {
       version: '5.3.5',
       library: 'styled',
       type: 'dependency',
-      resources: ['https://unpkg.com/styled-components@{{version}}/dist/styled-components.min.js'],
+      resources: [
+        'https://cdn.jsdelivr.net/npm/styled-components@{{version}}/dist/styled-components.min.js',
+      ],
     },
     moment: {
       version: '2.29.4',
       library: 'moment',
       type: 'dependency',
-      resources: ['https://unpkg.com/moment@{{version}}/moment.js'],
+      resources: ['https://cdn.jsdelivr.net/npm/moment@{{version}}/moment.js'],
     },
     '@music163/tango-boot': {
       version: '0.2.1',
       library: 'TangoBoot',
       type: 'baseDependency',
-      resources: ['https://unpkg.com/@music163/tango-boot@{{version}}/dist/boot.js'],
+      resources: ['https://cdn.jsdelivr.net/npm/@music163/tango-boot@{{version}}/dist/boot.js'],
       // resources: ['http://localhost:9001/boot.js'],
       description: '云音乐低代码运行时框架',
     },
@@ -56,30 +62,21 @@ const tangoConfigJson = {
       library: 'TangoAntd',
       type: 'baseDependency',
       resources: [
-        'https://unpkg.com/@music163/antd@{{version}}/dist/index.js',
-        'https://unpkg.com/antd@4.24.13/dist/antd.css',
+        'https://cdn.jsdelivr.net/npm/@music163/antd@{{version}}/dist/index.js',
+        'https://cdn.jsdelivr.net/npm/antd@4.24.13/dist/antd.css',
       ],
       description: '云音乐低代码中后台应用基础物料',
       designerResources: [
-        'https://unpkg.com/@music163/antd@{{version}}/dist/designer.js',
+        'https://cdn.jsdelivr.net/npm/@music163/antd@{{version}}/dist/designer.js',
         // 'http://localhost:9002/designer.js',
-        'https://unpkg.com/antd@4.24.13/dist/antd.css',
+        'https://cdn.jsdelivr.net/npm/antd@4.24.13/dist/antd.css',
       ],
     },
   },
 };
 
-const appJson: any = {
-  pages: [
-    {
-      path: '/',
-      name: '首页',
-    },
-  ],
-};
-
 const routesCode = `
-import Index from "./pages/index";
+import Index from "./pages/list";
 
 const routes = [
   {
@@ -145,15 +142,21 @@ import {
   Input,
   FormilyForm,
 } from "@music163/antd";
+import { Space } from '@music163/antd';
+import { MyButton } from '../components/button';
+
 class App extends React.Component {
   render() {
     return (
       <Page title={tango.stores.app.title}>
-       <Section>
+       <Section title="Section Title">
        </Section>
        <Section>
+       <Space>
+          <MyButton />
           <Button>button</Button>
           <Input />
+          </Space>
         </Section>
       </Page>
     );
@@ -161,6 +164,16 @@ class App extends React.Component {
 }
 export default definePage(App);
 `;
+
+const componentsButtonCode = `
+import React from 'react';
+
+export function MyButton() {
+  return <button>my button</button>
+}
+`;
+
+const componentsPrototypeCode = ``;
 
 const storeApp = `
 import { defineStore } from '@music163/tango-boot';
@@ -178,6 +191,13 @@ import { defineServices } from '@music163/tango-boot';
 import './sub';
 
 export default defineServices({
+  longLongLongLongLongLongLongLongGet: {
+    url: 'https://nei.hz.netease.com/api/apimock-v2/cc974ffbaa7a85c77f30e4ce67deb67f/api/getUserProfile',
+    formatter: res => res.data,
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  },
   get: {
     url: 'https://nei.hz.netease.com/api/apimock-v2/cc974ffbaa7a85c77f30e4ce67deb67f/api/getUserProfile',
     formatter: res => res.data,
@@ -233,13 +253,14 @@ p {
 
 export const sampleFiles = [
   { filename: '/package.json', code: JSON.stringify(packageJson) },
-  { filename: '/appJson.json', code: JSON.stringify(appJson) },
   { filename: '/tango.config.json', code: JSON.stringify(tangoConfigJson) },
   { filename: '/README.md', code: '# readme' },
   { filename: '/src/index.less', code: lessCode },
   { filename: '/src/style.css', code: cssCode },
   { filename: '/src/index.js', code: entryCode },
-  { filename: '/src/pages/index.js', code: viewHomeCode },
+  { filename: '/src/pages/list.js', code: viewHomeCode },
+  { filename: '/src/components/button.js', code: componentsButtonCode },
+  { filename: '/src/components/prototype.js', code: componentsPrototypeCode },
   { filename: '/src/routes.js', code: routesCode },
   { filename: '/src/stores/index.js', code: storeIndexCode },
   { filename: '/src/stores/app.js', code: storeApp },
