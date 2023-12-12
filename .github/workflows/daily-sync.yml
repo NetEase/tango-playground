@@ -73,24 +73,35 @@ jobs:
             echo "::error::Some files are rejected"
             git status | grep .rej$ | xargs cat
             exit 1
-
-          else
-            # get upstream current hash
-            current_hash=$(git rev-parse upstream/main)
-
-            # commit changes
-            git add .
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "feat: sync upstream changes\n\nupdated to NetEase/tango@${current_hash}"
-            commit_hash=$(git rev-parse HEAD)
-            echo "commit_hash=${commit_hash}" >> $GITHUB_OUTPUT
-
-            git push
-            echo "push_success=true" >> $GITHUB_OUTPUT
           fi
 
-  
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Update dependencies
+        run: |
+          npm install
+          npm update @music163/tango-core @music163/tango-designer @music163/tango-helpers
+
+      - name: Push changes
+        run: |
+          # get upstream current hash
+          current_hash=$(git rev-parse upstream/main)
+          nl=$'\n';
+
+          # commit changes
+          git add .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "feat: sync upstream changes${nl}${nl}updated to NetEase/tango@${current_hash}"
+          commit_hash=$(git rev-parse HEAD)
+          echo "commit_hash=${commit_hash}" >> $GITHUB_OUTPUT
+
+          git push
+          echo "push_success=true" >> $GITHUB_OUTPUT
+
   deploy:
     needs: sync_upstream
     if: ${{ needs.sync_upstream.outputs.upstream_changed == 'true' && needs.sync_upstream.outputs.push_success == 'true' }}
