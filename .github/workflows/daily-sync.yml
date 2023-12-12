@@ -1,0 +1,98 @@
+name: deploy
+
+permissions:
+  contents: write
+  actions: read
+
+on:
+  # TODO: sync changes when upstream repo is updated (e.g. webhooks)
+  schedule:
+    - cron: '30 9 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  sync_upstream:
+    runs-on: ubuntu-latest
+    outputs:
+      upstream_changed: ${{ steps.check_upstream.outputs.upstream_changed }}
+      push_success: ${{ steps.sync_changes.outputs.push_success }}
+      commit_hash: ${{ steps.sync_changes.outputs.commit_hash }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Check upstream modified
+        id: check_upstream
+        run: |
+          # get last sync hash
+          last_hash=$(git log --grep 'feat: sync upstream changes' -1 | grep -P '(?<=updated to NetEase/tango@).+$' -o)
+          echo "last_hash=${last_hash}" >> $GITHUB_OUTPUT
+
+          # add upstream to remote
+          if [[ $(git remote | grep upstream) ]]; then
+            git remote remove upstream
+          fi
+          git remote add upstream https://github.com/NetEase/tango.git
+          git fetch upstream
+
+          # check if upstream has changed
+          if [[ $(git diff upstream/main ${last_hash} -- apps/playground) ]]; then
+            echo "upstream_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "upstream_changed=false" >> $GITHUB_OUTPUT
+            echo "No changes from upstream"
+          fi
+
+      - name: Sync upstream changes
+        id: sync_changes
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
+        env:
+          LAST_HASH: ${{ steps.check_upstream.outputs.last_hash }}
+        run: |
+          last_hash=$LAST_HASH
+          # get changed files
+          # changed=$(git diff ${last_hash} -- apps/playground ./*)
+          # git diff upstream/main -- apps/playground/* HEAD -- ./* | sed -e "s|apps/playground/||g" > changed.diff
+          git diff ${last_hash}:apps/playground/ HEAD | sed -e "s|apps/playground/||g" > changed.diff
+          echo "::debug::$(cat changed.diff)"
+
+          # reset related files to upstream
+          git restore --source upstream/main apps/playground
+          rm -rf ./src ./config
+          mv apps/playground/* ./ -f
+          rm -rf apps/playground/
+          git add .
+
+          # apply changes
+          git apply ./changed.diff --exclude=README.md --reject
+          rm ./changed.diff
+
+          # check if all files are patched without any conflicts
+          if [[ $(git status | grep .rej$) ]]; then
+            # print rejected files to console
+            echo "::error::Some files are rejected"
+            git status | grep .rej$ | xargs cat
+            exit 1
+
+          else
+            # get upstream current hash
+            current_hash=$(git rev-parse upstream/main)
+
+            # commit changes
+            git add .
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "feat: sync upstream changes\n\nupdated to NetEase/tango@${current_hash}"
+            commit_hash=$(git rev-parse HEAD)
+            echo "commit_hash=${commit_hash}" >> $GITHUB_OUTPUT
+
+            git push
+            echo "push_success=true" >> $GITHUB_OUTPUT
+          fi
+
+  
+  deploy:
+    needs: sync_upstream
+    if: ${{ needs.sync_upstream.outputs.upstream_changed == 'true' && needs.sync_upstream.outputs.push_success == 'true' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
