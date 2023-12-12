@@ -76,16 +76,19 @@ jobs:
           fi
 
       - name: Setup Node
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
       - name: Update dependencies
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
         run: |
           npm install
           npm update @music163/tango-core @music163/tango-designer @music163/tango-helpers
 
       - name: Push changes
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
         run: |
           # get upstream current hash
           current_hash=$(git rev-parse upstream/main)
