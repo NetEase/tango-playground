@@ -23,6 +23,7 @@ export default defineConfig({
   ],
   npmClient: 'yarn',
   mfsu: false,
+  codeSplitting: false,
   externals: {
     react: 'React',
     'react-dom': 'ReactDOM',
@@ -43,6 +44,7 @@ export default defineConfig({
   https: {
     key: path.resolve(__dirname, 'local.netease.com-key.pem'),
     cert: path.resolve(__dirname, 'local.netease.com.pem'),
+    http2: false,
   },
   jsMinifier: 'terser',
   chainWebpack: (config: any) => {
