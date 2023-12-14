@@ -47,6 +47,7 @@ export default defineConfig({
     http2: false,
   },
   jsMinifier: 'terser',
+  devtool: 'source-map',
   chainWebpack: (config: any) => {
     // @see https://github.com/graphql/graphql-js/issues/1272#issuecomment-393903706
     config.module
