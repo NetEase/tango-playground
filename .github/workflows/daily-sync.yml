@@ -44,7 +44,9 @@ jobs:
           git fetch upstream
 
           # check if upstream has changed
-          if [[ $(git diff upstream/main ${last_hash} -- apps/playground) ]]; then
+          upstream_changes=$(git diff upstream/main ${last_hash} -- apps/playground)
+          echo "::debug::${upstream_changes}"
+          if [[ $upstream_changes ]]; then
             echo "upstream_changed=true" >> $GITHUB_OUTPUT
             echo "Files changed in apps/playground"
           else
@@ -62,18 +64,17 @@ jobs:
           # get changed files
           # changed=$(git diff ${last_hash} -- apps/playground ./*)
           # git diff upstream/main -- apps/playground/* HEAD -- ./* | sed -e "s|apps/playground/||g" > changed.diff
-          git diff ${last_hash}:apps/playground/ HEAD | sed -e "s|apps/playground/||g" > changed.diff
+          git diff ${last_hash}:apps/playground/ HEAD -- . ':!README.md' ':!package-lock.json' ':!.github' | sed -e "s|apps/playground/||g" > changed.diff
           echo "::debug::$(cat changed.diff)"
 
           # reset related files to upstream
           git restore --source upstream/main apps/playground
           rm -rf ./src ./config
-          mv apps/playground/* ./ -f
-          rm -rf apps/playground/
-          git add .
+          mv apps/playground/{.*,*} ./ -f -v
+          rm -rf ./apps
 
           # apply changes
-          git apply ./changed.diff --exclude=README.md --reject
+          git apply ./changed.diff --reject
           rm ./changed.diff
 
           # check if all files are patched without any conflicts
@@ -115,7 +116,7 @@ jobs:
 
           git push
           echo "push_success=true" >> $GITHUB_OUTPUT
-          echo "::debug::Commit has been pushed successfully"
+          echo "Commit has been pushed successfully"
 
   deploy:
     needs: sync_upstream
