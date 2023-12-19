@@ -70,7 +70,10 @@ jobs:
           # reset related files to upstream
           git restore --source upstream/main apps/playground
           rm -rf ./src ./config
-          mv apps/playground/{.*,*} ./ -f -v
+          mv apps/playground/{.[^.]*,*} ./ -f -v
+          if [[ $? -gt 0 ]]; then
+            cp apps/playground/{.[^.]*,*} ./ -r -v
+          fi
           rm -rf ./apps
 
           # apply changes
