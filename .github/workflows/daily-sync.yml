@@ -77,7 +77,7 @@ jobs:
           rm -rf ./apps
 
           # apply changes
-          git apply ./changed.diff --reject
+          git apply ./changed.diff --reject || :
           rm ./changed.diff
 
           # check if all files are patched without any conflicts
