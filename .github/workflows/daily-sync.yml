@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       upstream_changed: ${{ steps.check_upstream.outputs.upstream_changed }}
+      version_changed: ${{ steps.check_upstream.outputs.version_changed }}
       push_success: ${{ steps.sync_changes.outputs.push_success }}
       commit_hash: ${{ steps.sync_changes.outputs.commit_hash }}
     steps:
@@ -45,13 +46,24 @@ jobs:
 
           # check if upstream has changed
           upstream_changes=$(git diff upstream/main ${last_hash} -- apps/playground)
-          echo "::debug::${upstream_changes}"
+          echo "::debug::upstream_changes=${upstream_changes}"
+          version_changes=$(git diff upstream/main ${last_hash} -- packages | grep package.json)
+          echo "::debug::version_changes=${version_changes}"
+
           if [[ $upstream_changes ]]; then
             echo "upstream_changed=true" >> $GITHUB_OUTPUT
             echo "Files changed in apps/playground"
           else
             echo "upstream_changed=false" >> $GITHUB_OUTPUT
             echo "No changes from upstream"
+          fi
+
+          if [[ $version_changes ]]; then
+            echo "version_changed=true" >> $GITHUB_OUTPUT
+            echo "New release in packages"
+          else
+            echo "version_changed=false" >> $GITHUB_OUTPUT
+            echo "No release from upstream"
           fi
 
       - name: Sync upstream changes
@@ -89,19 +101,19 @@ jobs:
           fi
 
       - name: Setup Node
-        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' || steps.check_upstream.outputs.version_changed == 'true' }}
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
       - name: Update dependencies
-        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' || steps.check_upstream.outputs.version_changed == 'true' }}
         run: |
           npm install
           npm update @music163/tango-core @music163/tango-designer @music163/tango-helpers
 
       - name: Push changes
-        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' }}
+        if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' || steps.check_upstream.outputs.version_changed == 'true' }}
         run: |
           # get upstream current hash
           current_hash=$(git rev-parse upstream/main)
@@ -123,6 +135,6 @@ jobs:
 
   deploy:
     needs: sync_upstream
-    if: ${{ needs.sync_upstream.outputs.upstream_changed == 'true' && needs.sync_upstream.outputs.push_success == 'true' }}
+    if: ${{ needs.sync_upstream.outputs.push_success == 'true' }}
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
