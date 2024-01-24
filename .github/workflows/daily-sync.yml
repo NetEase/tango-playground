@@ -16,8 +16,8 @@ jobs:
     outputs:
       upstream_changed: ${{ steps.check_upstream.outputs.upstream_changed }}
       version_changed: ${{ steps.check_upstream.outputs.version_changed }}
-      push_success: ${{ steps.sync_changes.outputs.push_success }}
-      commit_hash: ${{ steps.sync_changes.outputs.commit_hash }}
+      push_success: ${{ steps.push_changes.outputs.push_success }}
+      commit_hash: ${{ steps.push_changes.outputs.commit_hash }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -113,6 +113,7 @@ jobs:
           npm update @music163/tango-core @music163/tango-designer @music163/tango-helpers
 
       - name: Push changes
+        id: push_changes
         if: ${{ steps.check_upstream.outputs.upstream_changed == 'true' || steps.check_upstream.outputs.version_changed == 'true' }}
         run: |
           # get upstream current hash
