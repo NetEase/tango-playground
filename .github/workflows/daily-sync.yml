@@ -47,7 +47,7 @@ jobs:
           # check if upstream has changed
           upstream_changes=$(git diff upstream/main ${last_hash} -- apps/playground)
           echo "::debug::upstream_changes=${upstream_changes}"
-          version_changes=$(git diff upstream/main ${last_hash} -- packages | grep package.json)
+          version_changes=$(git diff upstream/main ${last_hash} -- packages/**/package.json)
           echo "::debug::version_changes=${version_changes}"
 
           if [[ $upstream_changes ]]; then
