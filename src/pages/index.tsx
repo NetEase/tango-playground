@@ -15,7 +15,13 @@ import {
   themeLight,
 } from '@music163/tango-designer';
 import { createEngine, Workspace } from '@music163/tango-core';
-import { Logo, ProjectDetail, bootHelperVariables, sampleFiles } from '../helpers';
+import {
+  Logo,
+  ProjectDetail,
+  bootHelperVariables,
+  extendPrototypes,
+  sampleFiles,
+} from '../helpers';
 import {
   ApiOutlined,
   AppstoreAddOutlined,
@@ -33,6 +39,7 @@ import { useLocation, useMatch } from 'umi';
 const workspace = new Workspace({
   entry: '/src/index.js',
   files: sampleFiles,
+  prototypes: extendPrototypes,
 });
 
 // 2. 引擎初始化
@@ -53,12 +60,39 @@ createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_2891794_cou9i7556tl.js',
 });
 
+const menuData = {
+  common: [
+    {
+      title: '基本',
+      items: [
+        'Button',
+        'Section',
+        'Columns',
+        'Column',
+        'Box',
+        'Space',
+        'Typography',
+        'Title',
+        'Paragraph',
+      ],
+    },
+    {
+      title: '输入',
+      items: ['Input', 'InputNumber', 'Select'],
+    },
+    {
+      title: 'Formily表单',
+      items: ['FormilyForm', 'FormilyFormItem', 'FormilySubmit', 'FormilyReset'],
+    },
+  ],
+};
+
 /**
  * 5. 平台初始化，访问 https://local.netease.com:6006/
  */
 export default function App() {
   const [menuLoading, setMenuLoading] = useState(true);
-  const [menuData, setMenuData] = useState(false);
+  // const [menuData, setMenuData] = useState(false);
 
   const location = useLocation();
   const match = useMatch({ path: '/:name' });
@@ -117,7 +151,7 @@ export default function App() {
             label="组件"
             icon={<AppstoreAddOutlined />}
             widgetProps={{
-              menuData: menuData as any,
+              menuData,
               loading: menuLoading,
             }}
           />
@@ -146,10 +180,23 @@ export default function App() {
                 if (e.type === 'done') {
                   const sandboxWindow: any = sandboxQuery.window;
                   if (sandboxWindow.TangoAntd) {
-                    if (sandboxWindow.TangoAntd.menuData) {
-                      setMenuData(sandboxWindow.TangoAntd.menuData);
-                    }
+                    // if (sandboxWindow.TangoAntd.menuData) {
+                    //   setMenuData(sandboxWindow.TangoAntd.menuData);
+                    // }
                     if (sandboxWindow.TangoAntd.prototypes) {
+                      sandboxWindow.TangoAntd.prototypes['Section'].siblingNames = [
+                        'SnippetButtonGroup',
+                        'Section',
+                        'Section',
+                        'Section',
+                        'Section',
+                        'Section',
+                        'Section',
+                        'Section',
+                      ];
+                      sandboxWindow.TangoAntd.prototypes['FormilyFormItem'].siblingNames = [
+                        'FormilyFormItem',
+                      ];
                       workspace.setComponentPrototypes(sandboxWindow.TangoAntd.prototypes);
                     }
                   }

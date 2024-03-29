@@ -2,7 +2,7 @@ import path from 'path';
 import { defineConfig } from 'umi';
 
 export default defineConfig({
-  base: '/designer',
+base: '/designer',
   publicPath: '/designer/',
   outputPath: './dist/designer/',
   title: 'Tango Playground',
@@ -19,6 +19,7 @@ export default defineConfig({
       component: 'index',
       name: '首页',
     },
+    { path: '/mail', component: 'mail' },
     { path: '/docs', component: 'docs' },
   ],
   npmClient: 'yarn',
