@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "HOST=local.netease.com PORT=8001 umi dev",
     "build": "umi build",
-    "build:test": "COMPRESS=none umi build",
+"build:test": "COMPRESS=none umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "npm run dev"
@@ -16,6 +16,7 @@
     "@music163/tango-core": "latest",
     "@music163/tango-designer": "latest",
     "@music163/tango-helpers": "latest",
+    "@music163/antd": "^0.2.4",
     "antd": "^4.24.2",
     "coral-system": "^1.0.5",
     "umi": "^4.0.89"
