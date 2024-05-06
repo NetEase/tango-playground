@@ -4,9 +4,8 @@
   "private": true,
   "author": "Wells <ww.sun@outlook.com>",
   "scripts": {
-    "dev": "HOST=local.netease.com PORT=8001 umi dev",
+    "dev": "cross-env HOST=local.netease.com PORT=8001 umi dev",
     "build": "umi build",
-"build:test": "COMPRESS=none umi build",
     "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "npm run dev"
@@ -19,6 +18,7 @@
     "@music163/antd": "^0.2.4",
     "antd": "^4.24.2",
     "coral-system": "^1.0.5",
+    "cross-env": "^7.0.3",
     "umi": "^4.0.89"
   },
   "devDependencies": {
