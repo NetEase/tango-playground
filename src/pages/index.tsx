@@ -212,6 +212,9 @@ export default function App() {
           />
         </Sidebar>
         <WorkspacePanel>
+          <WorkspaceView mode="code">
+            <CodeEditor />
+          </WorkspaceView>
           <WorkspaceView mode="design">
             <Sandbox
               bundlerURL={process.env.SANDBOX_BUNDLER_URL || 'https://tango-demo.musicfe.com'}
@@ -233,9 +236,6 @@ export default function App() {
               }}
               navigatorExtra={<Button size="small">hello world</Button>}
             />
-          </WorkspaceView>
-          <WorkspaceView mode="code">
-            <CodeEditor />
           </WorkspaceView>
         </WorkspacePanel>
         <SettingPanel />
